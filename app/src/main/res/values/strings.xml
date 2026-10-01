@@ -1,3 +1,44 @@
 <resources>
     <string name="app_name">ModernTiles</string>
+
+    <!-- Accessibility Service -->
+    <string name="accessibility_description">ModernTiles uses this service solely to perform the system Lock Screen action upon tapping the Lock Screen Quick Settings tile.</string>
+
+    <!-- Quick Settings Tiles -->
+    <string name="tile_lock_label">Lock Screen</string>
+    <string name="tile_lock_subtitle">Tap to lock</string>
+
+    <string name="tile_sound_label">Sound Profile</string>
+    <string name="tile_sound_normal">Sound</string>
+    <string name="tile_sound_vibrate">Vibrate</string>
+    <string name="tile_sound_silent">Silent</string>
+
+    <!-- Settings UI -->
+    <string name="settings_title">ModernTiles</string>
+    <string name="settings_subtitle">Quick Settings Tiles &amp; Permissions</string>
+    <string name="permissions_section_title">Required Permissions</string>
+    <string name="tiles_section_title">Quick Settings Tiles</string>
+
+    <string name="permission_accessibility_title">Accessibility Service</string>
+    <string name="permission_accessibility_desc">Required by the Lock Screen tile to safely trigger the system lock screen action without device administrator rights.</string>
+    <string name="permission_accessibility_restricted_hint">Note for Android 13+: If the toggle is grayed out, open App Info &gt; tap three dots (top right) &gt; select \"Allow restricted settings\".</string>
+
+    <string name="permission_dnd_title">Do Not Disturb Access</string>
+    <string name="permission_dnd_desc">Required by the Sound Profile tile to switch the device into Silent mode without triggering security restrictions.</string>
+
+    <string name="status_granted">Granted</string>
+    <string name="status_missing">Needs Setup</string>
+    <string name="action_grant">Grant Access</string>
+    <string name="action_settings">Open Settings</string>
+
+    <string name="tile_lock_card_title">Lock Screen Tile</string>
+    <string name="tile_lock_card_desc">Instantly locks your device from the Quick Settings notification shade.</string>
+
+    <string name="tile_sound_card_title">Sound Profile Tile</string>
+    <string name="tile_sound_card_desc">Cycles through Sound, Vibrate, and Silent profiles with real-time status updates.</string>
+
+    <string name="action_enable_tile">Enable Tile</string>
+    <string name="action_pin_tile">Add to Quick Settings</string>
+    <string name="toast_tile_pinned">Tile request sent to notification panel</string>
+    <string name="toast_tile_disabled_first">Please enable the tile first</string>
 </resources>
