@@ -2,9 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Needed to change ringer mode to Silent without SecurityException -->
-    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
-
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -40,13 +37,13 @@
             </intent-filter>
         </service>
 
-        <!-- Sound Profile Tile Service -->
+        <!-- Volume Panel Tile Service -->
         <service
-            android:name=".services.SoundTileService"
+            android:name=".services.VolumeTileService"
             android:enabled="false"
             android:exported="true"
-            android:icon="@drawable/ic_tile_ring"
-            android:label="@string/tile_sound_label"
+            android:icon="@drawable/ic_tile_volume"
+            android:label="@string/tile_volume_label"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />

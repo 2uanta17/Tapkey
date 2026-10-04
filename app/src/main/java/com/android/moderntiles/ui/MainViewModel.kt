@@ -6,9 +6,10 @@ import androidx.lifecycle.viewModelScope
 import com.android.moderntiles.R
 import com.android.moderntiles.data.TilePreferences
 import com.android.moderntiles.services.LockTileService
-import com.android.moderntiles.services.SoundTileService
+import com.android.moderntiles.services.VolumeTileService
 import com.android.moderntiles.util.PermissionUtils
 import com.android.moderntiles.util.TileManager
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,9 +19,9 @@ import kotlinx.coroutines.launch
 
 data class SettingsUiState(
     val isAccessibilityEnabled: Boolean = false,
-    val isDndAccessGranted: Boolean = false,
     val isLockTileEnabled: Boolean = false,
-    val isSoundTileEnabled: Boolean = false
+    val isVolumeTileEnabled: Boolean = false,
+    val showAccessibilityBottomSheet: Boolean = false
 )
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
@@ -31,18 +32,18 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val uiState: StateFlow<SettingsUiState> = _uiState.asStateFlow()
 
     init {
-        // Collect tile states from DataStore and combine into UI state
+        // Collect tile states from DataStore
         viewModelScope.launch {
             combine(
                 preferences.isLockTileEnabled,
-                preferences.isSoundTileEnabled
-            ) { lockEnabled, soundEnabled ->
-                Pair(lockEnabled, soundEnabled)
-            }.collect { (lockEnabled, soundEnabled) ->
+                preferences.isVolumeTileEnabled
+            ) { lockEnabled, volumeEnabled ->
+                Pair(lockEnabled, volumeEnabled)
+            }.collect { (lockEnabled, volumeEnabled) ->
                 _uiState.update { currentState ->
                     currentState.copy(
                         isLockTileEnabled = lockEnabled,
-                        isSoundTileEnabled = soundEnabled
+                        isVolumeTileEnabled = volumeEnabled
                     )
                 }
             }
@@ -52,74 +53,97 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     /**
-     * Refreshes permission statuses (called on launch and on resume from system settings).
+     * Refreshes accessibility permission status.
      */
     fun refreshPermissions() {
         val context = getApplication<Application>()
         val accessibilityEnabled = PermissionUtils.isAccessibilityServiceEnabled(context)
-        val dndGranted = PermissionUtils.isDndAccessGranted(context)
 
         _uiState.update { currentState ->
-            currentState.copy(
-                isAccessibilityEnabled = accessibilityEnabled,
-                isDndAccessGranted = dndGranted
+            val updated = currentState.copy(isAccessibilityEnabled = accessibilityEnabled)
+            // Auto-dismiss bottom sheet if accessibility was just granted
+            if (accessibilityEnabled && currentState.showAccessibilityBottomSheet) {
+                updated.copy(showAccessibilityBottomSheet = false)
+            } else {
+                updated
+            }
+        }
+    }
+
+    /**
+     * Toggles the Lock Screen tile. Prompts the bottom sheet if permission is missing.
+     * Updates UI state optimistically to start the collapse/expand animation with zero lag.
+     */
+    fun onLockTileToggleRequested(targetEnabled: Boolean) {
+        val context = getApplication<Application>()
+        val hasPermission = PermissionUtils.isAccessibilityServiceEnabled(context)
+
+        if (targetEnabled && !hasPermission) {
+            _uiState.update { it.copy(showAccessibilityBottomSheet = true) }
+        } else {
+            // Optimistic update for fluid 60/120fps animation start
+            _uiState.update { it.copy(isLockTileEnabled = targetEnabled) }
+            viewModelScope.launch(Dispatchers.IO) {
+                TileManager.setTileEnabled(context, LockTileService::class.java, targetEnabled)
+                preferences.setLockTileEnabled(targetEnabled)
+            }
+        }
+    }
+
+    /**
+     * Pins the Lock Screen tile. Prompts the bottom sheet if permission is missing.
+     */
+    fun onLockTilePinRequested() {
+        val context = getApplication<Application>()
+        val hasPermission = PermissionUtils.isAccessibilityServiceEnabled(context)
+
+        if (!hasPermission) {
+            _uiState.update { it.copy(showAccessibilityBottomSheet = true) }
+        } else {
+            _uiState.update { it.copy(isLockTileEnabled = true) }
+            viewModelScope.launch(Dispatchers.IO) {
+                TileManager.requestPinTile(
+                    context = context,
+                    serviceClass = LockTileService::class.java,
+                    title = context.getString(R.string.tile_lock_label),
+                    iconResId = R.drawable.ic_tile_lock
+                )
+                preferences.setLockTileEnabled(true)
+            }
+        }
+    }
+
+    fun dismissAccessibilityBottomSheet() {
+        _uiState.update { it.copy(showAccessibilityBottomSheet = false) }
+    }
+
+    /**
+     * Toggles the Volume Panel tile component and persists preference (requires no permissions).
+     * Updates UI state optimistically to ensure immediate, stutter-free animations.
+     */
+    fun toggleVolumeTile(enabled: Boolean) {
+        val context = getApplication<Application>()
+        _uiState.update { it.copy(isVolumeTileEnabled = enabled) }
+        viewModelScope.launch(Dispatchers.IO) {
+            TileManager.setTileEnabled(context, VolumeTileService::class.java, enabled)
+            preferences.setVolumeTileEnabled(enabled)
+        }
+    }
+
+    /**
+     * Pins the Volume Panel tile to Quick Settings on Dispatchers.IO.
+     */
+    fun pinVolumeTile() {
+        val context = getApplication<Application>()
+        _uiState.update { it.copy(isVolumeTileEnabled = true) }
+        viewModelScope.launch(Dispatchers.IO) {
+            TileManager.requestPinTile(
+                context = context,
+                serviceClass = VolumeTileService::class.java,
+                title = context.getString(R.string.tile_volume_label),
+                iconResId = R.drawable.ic_tile_volume
             )
-        }
-    }
-
-    /**
-     * Toggles the Lock Screen tile component and persists preference.
-     */
-    fun toggleLockTile(enabled: Boolean) {
-        val context = getApplication<Application>()
-        TileManager.setTileEnabled(context, LockTileService::class.java, enabled)
-        viewModelScope.launch {
-            preferences.setLockTileEnabled(enabled)
-        }
-    }
-
-    /**
-     * Toggles the Sound Profile tile component and persists preference.
-     */
-    fun toggleSoundTile(enabled: Boolean) {
-        val context = getApplication<Application>()
-        TileManager.setTileEnabled(context, SoundTileService::class.java, enabled)
-        viewModelScope.launch {
-            preferences.setSoundTileEnabled(enabled)
-        }
-    }
-
-    /**
-     * Requests the system to pin the Lock Screen tile to Quick Settings.
-     */
-    fun pinLockTile() {
-        val context = getApplication<Application>()
-        TileManager.requestPinTile(
-            context = context,
-            serviceClass = LockTileService::class.java,
-            title = context.getString(R.string.tile_lock_label),
-            iconResId = R.drawable.ic_tile_lock
-        )
-        // Ensure preference reflects active state
-        viewModelScope.launch {
-            preferences.setLockTileEnabled(true)
-        }
-    }
-
-    /**
-     * Requests the system to pin the Sound Profile tile to Quick Settings.
-     */
-    fun pinSoundTile() {
-        val context = getApplication<Application>()
-        TileManager.requestPinTile(
-            context = context,
-            serviceClass = SoundTileService::class.java,
-            title = context.getString(R.string.tile_sound_label),
-            iconResId = R.drawable.ic_tile_ring
-        )
-        // Ensure preference reflects active state
-        viewModelScope.launch {
-            preferences.setSoundTileEnabled(true)
+            preferences.setVolumeTileEnabled(true)
         }
     }
 }

@@ -2,22 +2,24 @@ package com.android.moderntiles.services
 
 import android.accessibilityservice.AccessibilityService
 import android.view.accessibility.AccessibilityEvent
+import java.util.concurrent.atomic.AtomicReference
 
 class LockScreenAccessibilityService : AccessibilityService() {
 
     companion object {
-        @Volatile
-        var instance: LockScreenAccessibilityService? = null
-            private set
+        private val instanceRef = AtomicReference<LockScreenAccessibilityService?>()
+
+        val instance: LockScreenAccessibilityService?
+            get() = instanceRef.get()
     }
 
     override fun onServiceConnected() {
         super.onServiceConnected()
-        instance = this
+        instanceRef.set(this)
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
-        // No-op: service is exclusively utilized for global actions
+        // No-op: service exclusively executes global lock action
     }
 
     override fun onInterrupt() {
@@ -26,14 +28,11 @@ class LockScreenAccessibilityService : AccessibilityService() {
 
     override fun onDestroy() {
         super.onDestroy()
-        if (instance == this) {
-            instance = null
-        }
+        instanceRef.compareAndSet(this, null)
     }
 
     /**
-     * Executes the system global action to lock the device.
-     * Available on API 28+ without requiring device administration permissions.
+     * Executes the system global action to lock the device instantly.
      */
     fun lockScreen(): Boolean {
         return performGlobalAction(GLOBAL_ACTION_LOCK_SCREEN)

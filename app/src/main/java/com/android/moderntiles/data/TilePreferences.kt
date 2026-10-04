@@ -18,7 +18,7 @@ class TilePreferences(private val context: Context) {
 
     companion object {
         val KEY_LOCK_TILE_ENABLED = booleanPreferencesKey("lock_tile_enabled")
-        val KEY_SOUND_TILE_ENABLED = booleanPreferencesKey("sound_tile_enabled")
+        val KEY_VOLUME_TILE_ENABLED = booleanPreferencesKey("volume_tile_enabled")
     }
 
     val isLockTileEnabled: Flow<Boolean> = context.dataStore.data
@@ -33,7 +33,7 @@ class TilePreferences(private val context: Context) {
             preferences[KEY_LOCK_TILE_ENABLED] ?: false
         }
 
-    val isSoundTileEnabled: Flow<Boolean> = context.dataStore.data
+    val isVolumeTileEnabled: Flow<Boolean> = context.dataStore.data
         .catch { exception ->
             if (exception is IOException) {
                 emit(emptyPreferences())
@@ -42,7 +42,7 @@ class TilePreferences(private val context: Context) {
             }
         }
         .map { preferences ->
-            preferences[KEY_SOUND_TILE_ENABLED] ?: false
+            preferences[KEY_VOLUME_TILE_ENABLED] ?: false
         }
 
     suspend fun setLockTileEnabled(enabled: Boolean) {
@@ -51,9 +51,9 @@ class TilePreferences(private val context: Context) {
         }
     }
 
-    suspend fun setSoundTileEnabled(enabled: Boolean) {
+    suspend fun setVolumeTileEnabled(enabled: Boolean) {
         context.dataStore.edit { preferences ->
-            preferences[KEY_SOUND_TILE_ENABLED] = enabled
+            preferences[KEY_VOLUME_TILE_ENABLED] = enabled
         }
     }
 }
