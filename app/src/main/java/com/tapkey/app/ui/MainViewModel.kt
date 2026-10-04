@@ -1,14 +1,14 @@
-package com.android.moderntiles.ui
+package com.tapkey.app.ui
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.android.moderntiles.R
-import com.android.moderntiles.data.TilePreferences
-import com.android.moderntiles.services.LockTileService
-import com.android.moderntiles.services.VolumeTileService
-import com.android.moderntiles.util.PermissionUtils
-import com.android.moderntiles.util.TileManager
+import com.tapkey.app.R
+import com.tapkey.app.data.TilePreferences
+import com.tapkey.app.services.LockTileService
+import com.tapkey.app.services.VolumeTileService
+import com.tapkey.app.util.PermissionUtils
+import com.tapkey.app.util.TileManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -72,7 +72,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     /**
      * Toggles the Lock Screen tile. Prompts the bottom sheet if permission is missing.
-     * Updates UI state optimistically to start the collapse/expand animation with zero lag.
      */
     fun onLockTileToggleRequested(targetEnabled: Boolean) {
         val context = getApplication<Application>()
@@ -81,7 +80,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         if (targetEnabled && !hasPermission) {
             _uiState.update { it.copy(showAccessibilityBottomSheet = true) }
         } else {
-            // Optimistic update for fluid 60/120fps animation start
             _uiState.update { it.copy(isLockTileEnabled = targetEnabled) }
             viewModelScope.launch(Dispatchers.IO) {
                 TileManager.setTileEnabled(context, LockTileService::class.java, targetEnabled)
@@ -118,8 +116,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     /**
-     * Toggles the Volume Panel tile component and persists preference (requires no permissions).
-     * Updates UI state optimistically to ensure immediate, stutter-free animations.
+     * Toggles the Volume Panel tile component.
      */
     fun toggleVolumeTile(enabled: Boolean) {
         val context = getApplication<Application>()
@@ -131,7 +128,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     /**
-     * Pins the Volume Panel tile to Quick Settings on Dispatchers.IO.
+     * Pins the Volume Panel tile to Quick Settings.
      */
     fun pinVolumeTile() {
         val context = getApplication<Application>()

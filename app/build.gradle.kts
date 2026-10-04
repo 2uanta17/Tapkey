@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.android.moderntiles"
+    namespace = "com.tapkey.app"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.android.moderntiles"
+        applicationId = "com.tapkey.app"
         minSdk = 33
         targetSdk = 35
         versionCode = 1

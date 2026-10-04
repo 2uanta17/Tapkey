@@ -1,17 +1,15 @@
-package com.android.moderntiles.ui
+package com.tapkey.app.ui
 
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -53,6 +51,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -61,7 +60,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import com.android.moderntiles.R
+import com.tapkey.app.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -120,7 +119,7 @@ fun SettingsScreen(
                 )
             }
 
-            // Lock Screen Tile Card
+            // 1. Lock Screen Tile Card
             item {
                 TileControlCard(
                     iconResId = R.drawable.ic_tile_lock,
@@ -132,7 +131,7 @@ fun SettingsScreen(
                 )
             }
 
-            // Volume Panel Tile Card
+            // 2. Volume Panel Tile Card
             item {
                 TileControlCard(
                     iconResId = R.drawable.ic_tile_volume,
@@ -167,7 +166,6 @@ fun SettingsScreen(
                     .navigationBarsPadding(),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Header with icon
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -199,7 +197,6 @@ fun SettingsScreen(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
 
-                // High-contrast primary action button
                 Button(
                     onClick = {
                         val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS).apply {
@@ -229,7 +226,6 @@ fun SettingsScreen(
                     )
                 }
 
-                // Android 13+ Restricted Settings helper card with high contrast
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
@@ -267,7 +263,6 @@ fun SettingsScreen(
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
 
-                        // Distinct, high-contrast button for App Info
                         FilledTonalButton(
                             onClick = {
                                 val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {

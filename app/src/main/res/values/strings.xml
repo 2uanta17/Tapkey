@@ -1,15 +1,15 @@
 <resources>
-    <string name="app_name">ModernTiles</string>
+    <string name="app_name">Tapkey</string>
 
     <!-- Accessibility Service -->
-    <string name="accessibility_description">ModernTiles uses this service solely to perform the system Lock Screen action upon tapping the Lock Screen Quick Settings tile.</string>
+    <string name="accessibility_description">Tapkey uses this service solely to perform the system Lock Screen action upon tapping the Lock Screen Quick Settings tile.</string>
 
     <!-- Quick Settings Tiles -->
     <string name="tile_lock_label">Lock Screen</string>
     <string name="tile_volume_label">Volume Panel</string>
 
     <!-- Settings Dashboard UI -->
-    <string name="settings_title">ModernTiles</string>
+    <string name="settings_title">Tapkey</string>
     <string name="settings_subtitle">Quick Settings Tile Manager</string>
     <string name="tiles_section_title">Available Tiles</string>
 

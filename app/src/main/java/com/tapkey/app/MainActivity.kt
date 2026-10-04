@@ -1,13 +1,13 @@
-package com.android.moderntiles
+package com.tapkey.app
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import com.android.moderntiles.ui.MainViewModel
-import com.android.moderntiles.ui.SettingsScreen
-import com.android.moderntiles.ui.theme.ModernTilesTheme
+import com.tapkey.app.ui.MainViewModel
+import com.tapkey.app.ui.SettingsScreen
+import com.tapkey.app.ui.theme.TapkeyTheme
 
 class MainActivity : ComponentActivity() {
 
@@ -17,7 +17,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            ModernTilesTheme {
+            TapkeyTheme {
                 SettingsScreen(viewModel = viewModel)
             }
         }

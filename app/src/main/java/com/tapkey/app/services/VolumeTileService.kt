@@ -1,11 +1,11 @@
-package com.android.moderntiles.services
+package com.tapkey.app.services
 
 import android.content.Context
 import android.graphics.drawable.Icon
 import android.media.AudioManager
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
-import com.android.moderntiles.R
+import com.tapkey.app.R
 
 class VolumeTileService : TileService() {
 

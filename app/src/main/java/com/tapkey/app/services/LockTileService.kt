@@ -1,4 +1,4 @@
-package com.android.moderntiles.services
+package com.tapkey.app.services
 
 import android.app.PendingIntent
 import android.content.Intent
@@ -7,8 +7,8 @@ import android.os.Build
 import android.provider.Settings
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
-import com.android.moderntiles.R
-import com.android.moderntiles.util.PermissionUtils
+import com.tapkey.app.R
+import com.tapkey.app.util.PermissionUtils
 
 class LockTileService : TileService() {
 
@@ -24,6 +24,8 @@ class LockTileService : TileService() {
             tile.label = getString(R.string.tile_lock_label)
             tile.subtitle = null // Clean single-line appearance
             tile.icon = Icon.createWithResource(this, R.drawable.ic_tile_lock)
+
+            // Standard neutral push-button state for quick action tiles
             tile.state = Tile.STATE_INACTIVE
             tile.updateTile()
         }
@@ -41,7 +43,6 @@ class LockTileService : TileService() {
 
         // 2. If instance is not bound, verify if permission is enabled in Settings
         if (PermissionUtils.isAccessibilityServiceEnabled(this)) {
-            // Re-check once immediately in case of rapid bind
             val retryService = LockScreenAccessibilityService.instance
             if (retryService != null) {
                 retryService.lockScreen()

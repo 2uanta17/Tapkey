@@ -1,4 +1,4 @@
-package com.android.moderntiles.util
+package com.tapkey.app.util
 
 import android.app.StatusBarManager
 import android.content.ComponentName

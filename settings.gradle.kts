@@ -22,5 +22,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "ModernTiles"
+rootProject.name = "Tapkey"
 include(":app")

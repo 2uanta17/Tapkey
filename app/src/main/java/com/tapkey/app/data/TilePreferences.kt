@@ -1,4 +1,4 @@
-package com.android.moderntiles.data
+package com.tapkey.app.data
 
 import android.content.Context
 import androidx.datastore.core.DataStore
@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import java.io.IOException
 
-private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "tile_preferences")
+private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "tapkey_preferences")
 
 class TilePreferences(private val context: Context) {
 
