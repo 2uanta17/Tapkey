@@ -14,7 +14,8 @@ A minimal Quick Settings companion to reduce wear on physical hardware buttons.
 
 ## Installation
 
-1. Download the APK from [Releases](../../releases).
+1. Download the APK from [Releases](../../releases).  
+   *(If Play Protect blocks install: temporarily toggle off "Scan apps with Play Protect" in Play Store settings).*
 2. Go to **Settings > Apps > Tapkey > three dots (top right) > Allow restricted settings**.
 3. Open the app, enable Accessibility, and add the tiles to Quick Settings.
 
