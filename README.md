@@ -1,7 +1,7 @@
 # Tapkey
 
 <p align="center">
-  <img alt="Tapkey on Google Pixel 7" src="https://github.com/user-attachments/assets/de693379-c414-49b6-95ea-2e556eacf262" width="360">
+  <img alt="Tapkey on Google Pixel 7" src="https://github.com/user-attachments/assets/d99fb272-fa90-48fd-998b-091d3358c93d" width="360">
 </p>
 
 A minimal Quick Settings companion to reduce wear on physical hardware buttons.
